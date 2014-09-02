@@ -18,6 +18,7 @@ import jpype
 import common
 import time
 import threading
+import Queue
 
 class myThread (threading.Thread):
     """
@@ -25,11 +26,12 @@ class myThread (threading.Thread):
     
     join() returns False, if any exception during this has been raised.
     """
-    def __init__(self, threadID, name):
+    def __init__(self, threadID, name, q):
         threading.Thread.__init__(self)
         self.threadID = threadID
         self.name = name
         self.success = False
+        self._q = q
         
     def _msg(self, msg):
         print "[" + self.name + "] " + msg
@@ -45,7 +47,7 @@ class myThread (threading.Thread):
             
         self._msg("trying to access jvm")
         try:
-            jpype.java.lang.System.out.println(self.name + ": hello world")
+            self._q.put(jpype.java.lang.String(self.name + ": hello world"))
             #time.sleep(1)
             self.success = True
         except:
@@ -66,25 +68,32 @@ class ThreadingTestCase(common.JPypeTestCase) :
         common.JPypeTestCase.setUp(self)
     
     def testSequentialThreads(self):
-        t1 = myThread(1, "worker-1")
-        t2 = myThread(2, "worker-2")
+        q = Queue.Queue()
+        t1 = myThread(1, "worker-1", q)
+        t2 = myThread(2, "worker-2", q)
 
         t1.start()
-        self.assertTrue( t1.join(), t1.name + " failed")
+        t1.join()
+        self.assertEquals(q.get(), t1.name + ": hello world")
 
         t2.start()
-        self.assertTrue( t2.join(), t2.name + " failed")
+        t2.join()
+        self.assertTrue(q.get(), t2.name + ": hello world")
 
         
     def testParallelThreads(self):
-        t1 = myThread(1, "worker-1")
-        t2 = myThread(2, "worker-2")
+        q = Queue.Queue()
+        t1 = myThread(1, "worker-1", q)
+        t2 = myThread(2, "worker-2", q)
 
         t1.start()
         t2.start()
 
-        self.assertTrue( t1.join(), t1.name + " failed")
-        self.assertTrue( t2.join(), t2.name + " failed")
+        t1.join()
+        t2.join()
+        results = q.get(), q.get()
+        self.assertItemsEqual(results, [t1.name + ": hello world",
+                                        t2.name + ": hello world"])
     
     @classmethod
     def tearDownClass(cls):
