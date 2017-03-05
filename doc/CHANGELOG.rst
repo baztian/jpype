@@ -1,15 +1,22 @@
 Changelog
 =========
 
-This changelog *only* contains changes from the *first* pypi release (0.5.4.3) onwards.
+This changelog *only* contains changes from the *first* pypi release
+(0.5.4.3) onwards.
 
 - **Next version - unreleased**
+
+  - Increase thread safety by synchronizing calls.
+  - `jpype.attachThreadToJVM()` and `isThreadAttachedToJVM()` are
+    deprecated. JPype attaches the JVM to the python thread
+    automatically now.
+
 - **0.6.2 - 2017-01-13**
 
   - Fix JVM location for OSX.
   - Fix a method overload bug.
-  - Add support for synthetic methods 
-  
+  - Add support for synthetic methods
+
 - **0.6.1 - 2015-08-05**
 
   - Fix proxy with arguments issue.
@@ -78,7 +85,8 @@ This changelog *only* contains changes from the *first* pypi release (0.5.4.3) o
       JArray constructors
     * prevent ctrl+c seg faulting
     * corrected new[]/delete pairs to stop valgrind complaining
-    * ship basic PyMemoryView implementation (based on numpy's) for Python 2.6 compatibility
+    * ship basic PyMemoryView implementation (based on numpy's)
+      for Python 2.6 compatibility
 
   - Fast sliced access for primitive datatype arrays (factor of 10)
   - Use setter for Java bean property assignment even if not having a
@@ -99,7 +107,7 @@ This changelog *only* contains changes from the *first* pypi release (0.5.4.3) o
   - Fix memory leak in array setters
   - Fix memory leak in typemanager
   - Add userguide from sourceforge project by @baztian
-  
+
 - **0.5.4.5 - 2013-08-25**
 
   - Added support for OSX 10.9 Mavericks by @rmangino (#16)

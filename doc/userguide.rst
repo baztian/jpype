@@ -73,11 +73,9 @@ cooperate correctly. Thankfully, this is pretty easy to do.
 Python Threads
 ~~~~~~~~~~~~~~
 
-For the most part, Python threads based on OS level threads (i.e. posix
-threads) will work without problem. The only thing to remember is to call
-**jpype.attachThreadToJVM()** in the thread body to make the JVM usable from
-that thread. For threads that you do not start yourself, you can call
-**isThreadAttachedToJVM()** to check.
+**jpype.attachThreadToJVM()** and **isThreadAttachedToJVM()** are
+*deprecated*. JPype attaches the JVM to the python thread
+automatically now.
 
 Java Threads
 ~~~~~~~~~~~~
@@ -566,13 +564,6 @@ Exceptions
 ::::::::::
 
 On failure, a RuntimeException is raised.
-
-
-isThreadAttachedToJVM method
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-For the most part, this method does not have to be called. It will be
-automatically executed when the jpype module is unloaded at Python's exit.
 
 
 Arguments
