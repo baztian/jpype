@@ -1,5 +1,8 @@
 from threading import Thread
-from queue import Queue
+try:
+    from Queue import Queue
+except ImportError:
+    from queue import Queue
 
 import jpype
 from . import common
@@ -11,9 +14,7 @@ class ThreadingTestCase(common.JPypeTestCase):
         super(ThreadingTestCase, self).setUp()
 
     def _java_printer(self, name, q):
-        #jpype.attachThreadToJVM()
         q.put(jpype.java.lang.String("foobar %s" % name))
-        #jpype.detachThreadFromJVM()
 
     def testParallelThreads(self):
         q = Queue()
